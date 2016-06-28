@@ -296,6 +296,7 @@
 				63A534E31D21BBE70009E8B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

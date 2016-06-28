@@ -12,14 +12,24 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func requestToken(sender: AnyObject) {
+        GitHubOAuth.shared.oAuthRequestWith(["scope": "email,user"])
+    }
+    
+    @IBAction func printToken(sender: AnyObject) {
+        do {
+            let token = try GitHubOAuth.shared.accessToken()
+            print("Access Token: \(token)")
+        } catch let error {
+            print(error)
+        }
+    }
 
 }
 

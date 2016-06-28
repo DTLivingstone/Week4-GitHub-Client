@@ -25,6 +25,10 @@ enum SaveOptions: Int {
     case userDefaults
 }
 
+enum saveOptions : Int {
+    case UserDefaults
+}
+
 class GitHubOAuth {
     static let shared = GitHubOAuth()
     private init(){}
@@ -72,11 +76,11 @@ class GitHubOAuth {
                 for(_, value) in matches.enumerate() {
                     let matchRange = value.rangeAtIndex(1)
                     
-                    return (string as String).substringWithRange(matchRange)
+                    return (string as NSString).substringWithRange(matchRange)
                 }
             }
         } catch _ {
-            throws GitHubOAuthError.ExtractingTokenFromString("Could Not extract token from string.")
+            throw GitHubOAuthError.ExtractingTokenFromString("")
         }
         return nil
     }
@@ -101,12 +105,11 @@ class GitHubOAuth {
                 let session = NSURLSession(configuration: sessionsConfiguration)
                 
                 session.dataTaskWithURL(requestURL, completionHandler: { (data, response, error) in
-                    if let _ error {
-                        NSOperationQueue.mainQueue().addOperationWithBlock({
-                            completion(success: false)
-                        })
-                        return
-                    }
+                    //                    if let _ = error {
+                    //                        NSOperationQueue.mainQueue().addOperationWithBlock({
+                    //                            completion(success: false)
+                    //                            return})
+                    //                    }
                     
                     if let data = data {
                         if let tokenString = self.stringWith(data) {
@@ -114,8 +117,8 @@ class GitHubOAuth {
                                 if let token = try self.accessTokenFromString(tokenString) {
                                     NSOperationQueue.mainQueue().addOperationWithBlock({
                                         completion(success: self.saveAccessTokenToUserDefaults(token))
-                                    }
-                                })
+                                    })
+                                }
                             } catch _ {
                                 NSOperationQueue.mainQueue().addOperationWithBlock({
                                     completion(success: false)
@@ -129,13 +132,11 @@ class GitHubOAuth {
             NSOperationQueue.mainQueue().addOperationWithBlock({
                 completion(success: false)
             })
-            
         }
-//        func accessToken() throws -> String? {
-//            guard let accessToken = NSUserDefaults.standardUserDefaults.().stringForKey(kATK) else {
-//                throw GitHubOAuthError.MissingAccessToken("There is no Access Token Saved.")
-//            }
-//            return AccessToken
-//        }
+    }
+    func accessToken() throws -> String? {
+        guard let accessToken = NSUserDefaults.standardUserDefaults().stringForKey(kAcccessTokenKey) else { throw GitHubOAuthError.MissingAccessToken("There is no access token saved") }
         
+        return accessToken
+    }
 }
