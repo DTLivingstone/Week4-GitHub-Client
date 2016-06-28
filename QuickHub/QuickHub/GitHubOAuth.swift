@@ -25,10 +25,6 @@ enum SaveOptions: Int {
     case userDefaults
 }
 
-enum saveOptions : Int {
-    case UserDefaults
-}
-
 class GitHubOAuth {
     static let shared = GitHubOAuth()
     private init(){}
@@ -104,14 +100,7 @@ class GitHubOAuth {
                 
                 let session = NSURLSession(configuration: sessionsConfiguration)
                 
-                session.dataTaskWithURL(requestURL, completionHandler: { (data, response, error) in
-                    //                    if let _ = error {
-                    //                        NSOperationQueue.mainQueue().addOperationWithBlock({
-                    //                            completion(success: false)
-                    //                            return})
-                    //                    }
-                    
-                    if let data = data {
+                session.dataTaskWithURL(requestURL, completionHandler: { (data, response, error) in if let data = data {
                         if let tokenString = self.stringWith(data) {
                             do {
                                 if let token = try self.accessTokenFromString(tokenString) {
@@ -126,7 +115,7 @@ class GitHubOAuth {
                             }
                         }
                     }
-                }).resume() //unusual but important
+                }).resume()
             }
         } catch _ {
             NSOperationQueue.mainQueue().addOperationWithBlock({
